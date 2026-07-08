@@ -1,21 +1,23 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class TodoCreate(BaseModel):
     title: str
-    description: str | None = None
+    description: Optional[str] = None
 
 
 class TodoUpdate(BaseModel):
-    title: str | None = None
-    description: str | None = None
-    completed: bool | None = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    completed: Optional[bool] = None
 
 
 class TodoResponse(BaseModel):
     id: int
     title: str
-    description: str | None
+    description: Optional[str]
     completed: bool
     user_id: int
 

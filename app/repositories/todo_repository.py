@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from app.models.todo import Todo
@@ -18,7 +20,7 @@ def create_todo(db: Session, todo_data: TodoCreate, user_id: int):
     return todo
 
 
-def get_user_todos(db: Session, user_id: int, completed: bool | None = None):
+def get_user_todos(db: Session, user_id: int, completed: Optional[bool] = None):
     query = db.query(Todo).filter(Todo.user_id == user_id)
 
     if completed is not None:

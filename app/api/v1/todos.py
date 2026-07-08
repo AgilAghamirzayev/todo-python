@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
@@ -29,7 +31,7 @@ def create_todo(
 
 @router.get("", response_model=list[TodoResponse])
 def get_todos(
-    completed: bool | None = None,
+    completed: Optional[bool] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):

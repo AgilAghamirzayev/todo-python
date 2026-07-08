@@ -1,6 +1,6 @@
-# Todo App API
+# Todo App
 
-A small REST API for managing personal todos. The project uses **FastAPI** for the HTTP layer, **PostgreSQL** for persistence, **SQLAlchemy** for database access, **Alembic** for migrations, and JWT bearer tokens for authenticated todo operations.
+A full-stack todo app with a **FastAPI** backend and a modern **React + shadcn/ui-style** frontend. Users can register, log in, and manage their own todos with JWT authentication.
 
 ## Features
 
@@ -10,6 +10,7 @@ A small REST API for managing personal todos. The project uses **FastAPI** for t
 - Keep todos scoped to the authenticated user
 - Filter todos by completion status
 - PostgreSQL setup through Docker Compose
+- Clean React frontend with reusable UI components
 
 ## Project Structure
 
@@ -23,29 +24,32 @@ app/
   schemas/          Pydantic request/response models
   services/         Business logic
 alembic/            Database migration files
+frontend/           Vite React frontend
 docker-compose.yml  Local PostgreSQL service
 ```
 
 ## Requirements
 
-- Python 3.11+
+- Python 3.9+
+- Node.js 20+
 - Docker and Docker Compose
 - PostgreSQL client support through `psycopg2-binary`
 
-## Setup
+## Backend Setup
 
 Create a virtual environment and install dependencies:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
 Create a `.env` file in the project root:
 
 ```env
-DATABASE_URL=postgresql://todo_user:todo_password@localhost:5432/todo_db
+DATABASE_URL=postgresql+psycopg://todo_user:todo_password@localhost:5432/todo_db
 SECRET_KEY=change-this-secret
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=60
@@ -69,11 +73,29 @@ Start the API:
 uvicorn app.main:app --reload
 ```
 
-The API will be available at:
+The backend will be available at:
 
 - `http://127.0.0.1:8000`
 - Swagger docs: `http://127.0.0.1:8000/docs`
 - ReDoc: `http://127.0.0.1:8000/redoc`
+
+## Frontend Setup
+
+In a second terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will run at `http://127.0.0.1:5173`.
+
+If your backend runs somewhere else, create `frontend/.env`:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
 
 ## Main Endpoints
 
@@ -124,3 +146,4 @@ curl -X POST http://127.0.0.1:8000/api/v1/todos \
 - `docker-compose.yml` starts only PostgreSQL; the FastAPI app runs locally with `uvicorn`.
 - Auth login uses FastAPI's OAuth2 password form, so send `username` and `password` as form fields.
 - Keep `SECRET_KEY` private and use a stronger value outside local development.
+- If PostgreSQL reports `relation "users" does not exist`, run `alembic upgrade head`.

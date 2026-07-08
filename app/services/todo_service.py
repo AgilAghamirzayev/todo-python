@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -15,7 +17,7 @@ def create_user_todo(db: Session, todo_data: TodoCreate, user_id: int):
     return create_todo(db, todo_data, user_id)
 
 
-def list_user_todos(db: Session, user_id: int, completed: bool | None = None):
+def list_user_todos(db: Session, user_id: int, completed: Optional[bool] = None):
     return get_user_todos(db, user_id, completed)
 
 
